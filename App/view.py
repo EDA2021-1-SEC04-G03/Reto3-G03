@@ -47,7 +47,6 @@ def printMenu():
     print('-------------------------------------')
 
 catalog = None
-songFile = 'subsamples-small/context_content_features-small.csv'
 """
 Menu principal
 """
@@ -58,17 +57,21 @@ while running:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         cont = controller.init()
-        controller.loadData(cont,songFile)
-        print(type(cont))
-        print(cont.keys())
-        print(lt.size(cont['songs']))
-        print(cont['instrumentalness']['root']['key'])
-        print(cont['instrumentalness']['root']['left']['key'])
-        print(cont['instrumentalness']['root']['right']['key'])
+        controller.loadData(cont)
+        print('Eventos cargados: ' + str(controller.eventsSize(cont)))
+        print('Artistas únicos cargados: ' + str(controller.artistsSize(cont)))
+        print('Pistas de audio únicas cargados: ' + str(controller.tracksSize(cont)))
 
     elif int(inputs[0]) == 2:
         #req 1
-        pass
+        print("\nBuscando eventos basados en una caracteristica de contenido en un rango determinado: ")
+        rangoInicial = float(input("Rango inicial: "))
+        rangoFinal = float(input("Rango final: "))
+        content=input("Contenido a buscar: ")
+        total = controller.getContentByRange(cont, rangoInicial, rangoFinal, content)
+        print("\nEl total de eventos en el rango es de: " + str(total))
+        print('Altura del arbol '+content+': ' + str(controller.indexHeight(cont, content)))
+        print('Elementos en el arbol '+content+': ' + str(controller.indexSize(cont, content))+"\n")
 
     elif int(inputs[0]) == 3:
         #Req 2

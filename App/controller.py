@@ -41,17 +41,60 @@ def init():
 
 # Funciones para la carga de datos
 
-def loadData(analyzer, songsfile):
+def loadData(analyzer):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    songsfile = cf.data_dir + songsfile
-    input_file = csv.DictReader(open(songsfile, encoding="utf-8"),
+
+    loadEvents(analyzer)
+    return
+
+def loadEvents(analyzer):
+    crimesfile = cf.data_dir + 'context_content_features/context_content_features-small.csv'
+    input_file = csv.DictReader(open(crimesfile, encoding="utf-8"),
                                 delimiter=",")
-    for song in input_file:
-        model.addSong(analyzer, song)
+    for crime in input_file:
+        model.addEvent(analyzer, crime)
     return analyzer
 
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def getContentByRange(analyzer, initialDate, finalDate, content):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    return model.getContentByRange(analyzer, initialDate,
+                                  finalDate, content)
+
+def indexHeight(analyzer, content):
+    """
+    Altura del indice (arbol)
+    """
+    return model.indexHeight(analyzer, content)
+
+
+def indexSize(analyzer, content):
+    """
+    Numero de nodos en el arbol
+    """
+    return model.indexSize(analyzer, content)
+
+def eventsSize(catalog):
+    """
+    Numero de libros cargados al catalogo
+    """
+    return model.eventsSize(catalog)
+
+def artistsSize(catalog):
+    """
+    Numero de autores cargados al catalogo
+    """
+    return model.artistsSize(catalog)
+
+def tracksSize(catalog):
+    """
+    Numero de autores cargados al catalogo
+    """
+    return model.tracksSize(catalog)
