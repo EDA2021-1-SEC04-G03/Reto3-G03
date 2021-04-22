@@ -46,7 +46,7 @@ def printMenu():
     print('-------------------------------------')
 
 catalog = None
-crimefile = 'context_content_features/context_content_features-small.csv.csv'
+
 """
 Menu principal
 """
@@ -57,10 +57,19 @@ while running:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         cont = controller.init()
-        controller.loadData(cont, crimefile)
+        controller.loadData(cont)
+        print('Eventos cargados: ' + str(controller.eventsSize(cont)))
+        print('Artistas únicos cargados: ' + str(controller.artistsSize(cont)))
+        print('Pistas de audio únicas cargados: ' + str(controller.tracksSize(cont)))
 
     elif int(inputs[0]) == 2:
         #req 1
+        print("\nBuscando eventos basado en una caracteristica de contenido en un rango determinado: ")
+        datoInicial = 0.5
+        datoFinal = 0.8
+        content="instrumentalness"
+        total = controller.getContentByRange(cont, datoInicial, datoFinal, content)
+        print("\nTotal de crimenes en el rango de fechas: " + str(total))
         pass
 
     elif int(inputs[0]) == 3:

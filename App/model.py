@@ -41,6 +41,8 @@ los mismos.
 
 # Construccion de modelos
 
+contenttuple=("instrumentalness","liveness","speechiness","danceability","valence","loudness","tempo","acousticness","energy")
+
 def newAnalyzer():
     """ Inicializa el analizador
 
@@ -50,28 +52,67 @@ def newAnalyzer():
 
     Retorna el analizador inicializado.
     """
-    analyzer = {'crimes': None,
-                'dateIndex': None
-                }
+    analyzer = {'events': None,
+               'artists': None,
+               'tracks': None}
 
-    analyzer['crimes'] = lt.newList('SINGLE_LINKED', None)
-    analyzer['dateIndex'] = om.newMap(omaptype='RBT',
-                                      comparefunction=compareDates)
+    analyzer['events'] = lt.newList('SINGLE_LINKED')
 
-    #hay que organizar por tempo, instrumentalness
+    analyzer['artists'] = mp.newMap(11000,
+                                   maptype='PROBING',
+                                   comparefunction=None)
+
+    analyzer['tracks'] = mp.newMap(31000,
+                                   maptype='PROBING',
+                                   comparefunction=None)
+    
+    for content in contenttuple:
+        analyzer[content] = om.newMap(omaptype='RBT',
+                                      comparefunction=compareFloat)
+    
     return analyzer
 
 # Funciones para agregar informacion al catalogo
 
-def addCrime(analyzer, crime):
+def addEvent(analyzer, event):
     """
+    Se adiciona un video a la lista de videos
     """
-    lt.addLast(analyzer['crimes'], crime)
-    updateDateIndex(analyzer['dateIndex'], crime)
-    return analyzer
+    lt.addLast(analyzer['events'], event)
+    addArtist(analyzer, event['artist_id'], event)
+    addTrack(analyzer, event['track_id'], event)
+    for content in contenttuple:
+        updateDateIndex(analyzer[content], event, content)
 
+def addArtist(analyzer, artist_id, event):
+    """
+    Esta función adiciona un video a la lista de videos de la misma categoría.
+    """
+    artists = analyzer['artists']
+    existartist = mp.contains(artists, artist_id)
+    if existartist:
+        entry = mp.get(artists, artist_id)
+        artist = me.getValue(entry)
+    else:
+        artist = newArtist(artist_id)
+        mp.put(artists, artist_id, artist)
+    lt.addLast(artist['events'], event)
 
-def updateDateIndex(map, crime):
+def addTrack(analyzer, track_id, event):
+    """
+    Esta función adiciona un video a la lista de videos de la misma categoría.
+    """
+    tracks = analyzer['tracks']
+    existtrack = mp.contains(tracks, track_id)
+    if existtrack:
+        entry = mp.get(tracks, track_id)
+        track = me.getValue(entry)
+    else:
+        track = newTrack(track_id)
+        mp.put(tracks, track_id, track)
+    lt.addLast(track['events'], event)
+
+def updateDateIndex(map, event, content_name):
     """
     Se toma la fecha del crimen y se busca si ya existe en el arbol
     dicha fecha.  Si es asi, se adiciona a su lista de crimenes
@@ -80,69 +121,96 @@ def updateDateIndex(map, crime):
     Si no se encuentra creado un nodo para esa fecha en el arbol
     se crea y se actualiza el indice de tipos de crimenes
     """
-    occurreddate = crime['OCCURRED_ON_DATE']
-    crimedate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
-    entry = om.get(map, crimedate.date())
+    content = float(event[content_name])
+    entry = om.get(map, content)
     if entry is None:
-        datentry = newDataEntry(crime)
-        om.put(map, crimedate.date(), datentry)
+        floatentry = newDataEntry(event)
+        om.put(map, content, floatentry)
     else:
-        datentry = me.getValue(entry)
-    addDateIndex(datentry, crime)
+        floatentry = me.getValue(entry)
+    lt.addLast(floatentry['lst'], event)
     return map
-
-
-def addDateIndex(datentry, crime):
-    """
-    Actualiza un indice de tipo de crimenes.  Este indice tiene una lista
-    de crimenes y una tabla de hash cuya llave es el tipo de crimen y
-    el valor es una lista con los crimenes de dicho tipo en la fecha que
-    se está consultando (dada por el nodo del arbol)
-    """
-    lst = datentry['lstcrimes']
-    lt.addLast(lst, crime)
-    offenseIndex = datentry['offenseIndex']
-    offentry = m.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
-    if (offentry is None):
-        entry = newOffenseEntry(crime['OFFENSE_CODE_GROUP'], crime)
-        lt.addLast(entry['lstoffenses'], crime)
-        m.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], entry)
-    else:
-        entry = me.getValue(offentry)
-        lt.addLast(entry['lstoffenses'], crime)
-    return datentry
-
 
 def newDataEntry(crime):
     """
     Crea una entrada en el indice por fechas, es decir en el arbol
     binario.
     """
-    entry = {'offenseIndex': None, 'lstcrimes': None}
-    entry['offenseIndex'] = m.newMap(numelements=30,
-                                     maptype='PROBING',
-                                     comparefunction=compareOffenses)
-    entry['lstcrimes'] = lt.newList('SINGLE_LINKED', compareDates)
+    entry = {'lst': None}
+
+    entry['lst'] = lt.newList('SINGLE_LINKED', compareFloat)
     return entry
-
-
-def newOffenseEntry(offensegrp, crime):
-    """
-    Crea una entrada en el indice por tipo de crimen, es decir en
-    la tabla de hash, que se encuentra en cada nodo del arbol.
-    """
-    ofentry = {'offense': None, 'lstoffenses': None}
-    ofentry['offense'] = offensegrp
-    ofentry['lstoffenses'] = lt.newList('SINGLELINKED', compareOffenses)
-    return ofentry
 
 # Funciones para creacion de datos
 
+def newArtist(name):
+    """
+    Crea una nueva estructura para modelar los videos de un autor
+    y su promedio de ratings. Se crea una lista para guardar los
+    libros de dicho autor.
+    """
+    artist = {'name': "",
+              "events": None}
+    artist['name'] = name
+    artist['events'] = lt.newList('ARRAY_LIST', None)
+    return artist
+
+def newTrack(name):
+    """
+    Crea una nueva estructura para modelar los videos de un autor
+    y su promedio de ratings. Se crea una lista para guardar los
+    libros de dicho autor.
+    """
+    track = {'name': "",
+              "events": None}
+    track['name'] = name
+    track['events'] = lt.newList('ARRAY_LIST', None)
+    return track
+
 # Funciones de consulta
+
+def getContentByRange(analyzer, initialDate, finalDate, content):
+    """
+    Retorna el numero de crimenes en un rago de fechas.
+    """
+    lst = om.values(analyzer[content], initialDate, finalDate)
+    totcrimes = 0
+    for lstdate in lt.iterator(lst):
+        totcrimes += lt.size(lstdate['lst'])
+    return totcrimes
+
+def eventsSize(analyzer):
+    """
+    Número de libros en el catago
+    """
+    return lt.size(analyzer['events'])
+
+def artistsSize(analyzer):
+    """
+    Numero de autores en el catalogo
+    """
+    return mp.size(analyzer['artists'])
+
+def tracksSize(analyzer):
+    """
+    Numero de autores en el catalogo
+    """
+    return mp.size(analyzer['tracks'])
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
+
+def compareFloat(num1, num2):
+    """
+    Compara dos fechas
+    """
+    if (num1 == num2):
+        return 0
+    elif (num1 > num2):
+        return 1
+    else:
+        return -1
 
 def compareIds(id1, id2):
     """
