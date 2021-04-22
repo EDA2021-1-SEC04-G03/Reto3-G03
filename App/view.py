@@ -62,6 +62,22 @@ while running:
         print('Artistas únicos cargados: ' + str(controller.artistsSize(cont)))
         print('Pistas de audio únicas cargados: ' + str(controller.tracksSize(cont)))
 
+        for pos in (0,1,2,3,4):
+            dicc=lt.getElement(cont['events'],pos)
+            print("Posición:",pos)
+            for key in dicc:
+                print(key+": "+dicc[key], end=", ")
+            print("")
+        
+        size=lt.size(cont['events'])
+
+        for pos in (4,3,2,1,0):
+            dicc=lt.getElement(cont['events'],size-pos)
+            print("Posición:",size-pos)
+            for key in dicc:
+                print(key+": "+dicc[key], end=", ")
+            print("")
+
     elif int(inputs[0]) == 2:
         #req 1
         print("\nBuscando eventos basados en una caracteristica de contenido en un rango determinado: ")
