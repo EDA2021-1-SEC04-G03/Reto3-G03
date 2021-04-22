@@ -37,22 +37,49 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Caracterizar las reproducciones")
+    print("3- Encontrar música para festejar")
+    print('4- Encontrar música para estudiar')
+    print('5- Estudiar los géneros musicales')
+    print('6- Indicar el género musical más escuchado en el tiempo')
+    print("0- Salir")
+    print('-------------------------------------')
 
 catalog = None
-
+crimefile = 'context_content_features/context_content_features-small.csv.csv'
 """
 Menu principal
 """
-while True:
+running = True
+while running:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        cont = controller.init()
+        controller.loadData(cont, crimefile)
 
     elif int(inputs[0]) == 2:
+        #req 1
         pass
 
-    else:
-        sys.exit(0)
+    elif int(inputs[0]) == 3:
+        #Req 2
+        pass
+    
+    elif int(inputs[0]) == 4:
+        #req 3
+        pass
+
+    elif int(inputs[0]) == 5:
+        #req 4
+        pass
+
+    elif int(inputs[0]) == 6:
+        #req 5
+        pass
+
+    elif int(inputs[0]) == 0:
+        running = False
+        print("Adios!")
 sys.exit(0)
