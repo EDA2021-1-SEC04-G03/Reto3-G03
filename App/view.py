@@ -64,13 +64,14 @@ while running:
 
     elif int(inputs[0]) == 2:
         #req 1
-        print("\nBuscando eventos basado en una caracteristica de contenido en un rango determinado: ")
-        datoInicial = 0.5
-        datoFinal = 0.8
-        content="instrumentalness"
-        total = controller.getContentByRange(cont, datoInicial, datoFinal, content)
-        print("\nTotal de crimenes en el rango de fechas: " + str(total))
-        pass
+        print("\nBuscando eventos basados en una caracteristica de contenido en un rango determinado: ")
+        rangoInicial = float(input("Rango inicial: "))
+        rangoFinal = float(input("Rango final: "))
+        content=input("Contenido a buscar: ")
+        total = controller.getContentByRange(cont, rangoInicial, rangoFinal, content)
+        print("\nEl total de eventos en el rango es de: " + str(total))
+        print('Altura del arbol: ' + str(controller.indexHeight(cont, content)))
+        print('Elementos en el arbol: ' + str(controller.indexSize(cont, content))+"\n")
 
     elif int(inputs[0]) == 3:
         #Req 2

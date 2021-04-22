@@ -197,6 +197,19 @@ def tracksSize(analyzer):
     """
     return mp.size(analyzer['tracks'])
 
+def indexHeight(analyzer, content):
+    """
+    Altura del arbol
+    """
+    return om.height(analyzer[content])
+
+
+def indexSize(analyzer, content):
+    """
+    Numero de elementos en el indice
+    """
+    return om.size(analyzer[content])
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento

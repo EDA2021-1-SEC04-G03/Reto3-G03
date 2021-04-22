@@ -68,6 +68,19 @@ def getContentByRange(analyzer, initialDate, finalDate, content):
     return model.getContentByRange(analyzer, initialDate,
                                   finalDate, content)
 
+def indexHeight(analyzer, content):
+    """
+    Altura del indice (arbol)
+    """
+    return model.indexHeight(analyzer, content)
+
+
+def indexSize(analyzer, content):
+    """
+    Numero de nodos en el arbol
+    """
+    return model.indexSize(analyzer, content)
+
 def eventsSize(catalog):
     """
     Numero de libros cargados al catalogo
