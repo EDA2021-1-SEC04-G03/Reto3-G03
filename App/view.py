@@ -62,7 +62,9 @@ while running:
         print(type(cont))
         print(cont.keys())
         print(lt.size(cont['songs']))
-        print(om.size(cont['instrumentalness']))
+        print(cont['instrumentalness']['root']['key'])
+        print(cont['instrumentalness']['root']['left']['key'])
+        print(cont['instrumentalness']['root']['right']['key'])
 
     elif int(inputs[0]) == 2:
         #req 1

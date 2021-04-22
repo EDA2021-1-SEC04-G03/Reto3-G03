@@ -71,15 +71,15 @@ def newAnalyzer():
 
 # Funciones para agregar informacion al catalogo
 
-def addSong(analyzer, song, value):
+def addSong(analyzer, song):
     """
     """
     lt.addLast(analyzer['songs'], song)
-    om.put(analyzer['instrumentalness'], song, value)
+    updateInstrumentalness(analyzer['instrumentalness'], song)
     return analyzer
 
 
-def updateDateIndex(map, crime):
+def updateInstrumentalness(rbt, song):
     """
     Se toma la fecha del crimen y se busca si ya existe en el arbol
     dicha fecha.  Si es asi, se adiciona a su lista de crimenes
@@ -88,16 +88,19 @@ def updateDateIndex(map, crime):
     Si no se encuentra creado un nodo para esa fecha en el arbol
     se crea y se actualiza el indice de tipos de crimenes
     """
-    occurreddate = crime['OCCURRED_ON_DATE']
-    crimedate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
-    entry = om.get(map, crimedate.date())
+    inst = float(song['instrumentalness'])
+    entry = om.get(rbt, inst)
     if entry is None:
-        datentry = newDataEntry(crime)
-        om.put(map, crimedate.date(), datentry)
+        songs = lt.newList('SINGLE_LINKED', None)
+        lt.addLast(songs,song)
+        om.put(rbt, inst, {'size': 1, 'songs':songs})
+
     else:
-        datentry = me.getValue(entry)
-    addDateIndex(datentry, crime)
-    return map
+        value = me.getValue(entry)
+        value['size'] += 1
+        lt.addLast(value['songs'],song)
+
+    return rbt
 
 
 def addDateIndex(datentry, crime):
