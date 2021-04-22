@@ -50,24 +50,32 @@ def newAnalyzer():
 
     Retorna el analizador inicializado.
     """
-    analyzer = {'crimes': None,
-                'dateIndex': None
+    analyzer = {'songs':None, 
+                'instrumentalness': None,
+                'liveness': None,
+                'speechiness': None,
+                'danceability': None,
+                'valence': None, 
+                'loudness': None,
+                'tempo': None,
+                'acousticness': None,
+                'energy': None
                 }
 
-    analyzer['crimes'] = lt.newList('SINGLE_LINKED', None)
-    analyzer['dateIndex'] = om.newMap(omaptype='RBT',
-                                      comparefunction=compareDates)
+    analyzer['songs'] = lt.newList('SINGLE_LINKED', None)
+    analyzer['instrumentalness'] = om.newMap(omaptype='RBT',
+                                      comparefunction=compareInstrumentalness)
 
     #hay que organizar por tempo, instrumentalness
     return analyzer
 
 # Funciones para agregar informacion al catalogo
 
-def addCrime(analyzer, crime):
+def addSong(analyzer, song, value):
     """
     """
-    lt.addLast(analyzer['crimes'], crime)
-    updateDateIndex(analyzer['dateIndex'], crime)
+    lt.addLast(analyzer['songs'], song)
+    om.put(analyzer['instrumentalness'], song, value)
     return analyzer
 
 
@@ -113,12 +121,12 @@ def addDateIndex(datentry, crime):
     return datentry
 
 
-def newDataEntry(crime):
+def newSongEntry(song):
     """
     Crea una entrada en el indice por fechas, es decir en el arbol
     binario.
     """
-    entry = {'offenseIndex': None, 'lstcrimes': None}
+    entry = {'songId': None, 'lstcrimes': None}
     entry['offenseIndex'] = m.newMap(numelements=30,
                                      maptype='PROBING',
                                      comparefunction=compareOffenses)
@@ -144,13 +152,13 @@ def newOffenseEntry(offensegrp, crime):
 
 # Funciones de ordenamiento
 
-def compareIds(id1, id2):
+def compareInstrumentalness(i1, i2):
     """
     Compara dos crimenes
     """
-    if (id1 == id2):
+    if (i1 == i2):
         return 0
-    elif id1 > id2:
+    elif i1 > i2:
         return 1
     else:
         return -1

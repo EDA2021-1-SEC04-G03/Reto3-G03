@@ -41,15 +41,15 @@ def init():
 
 # Funciones para la carga de datos
 
-def loadData(analyzer, crimesfile):
+def loadData(analyzer, songsfile):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    crimesfile = cf.data_dir + crimesfile
+    crimesfile = cf.data_dir + songsfile
     input_file = csv.DictReader(open(crimesfile, encoding="utf-8"),
                                 delimiter=",")
-    for crime in input_file:
-        model.addCrime(analyzer, crime)
+    for song in input_file:
+        model.addSong(analyzer, song['instrumentalness'], song)
     return analyzer
 
 # Funciones de ordenamiento

@@ -24,6 +24,7 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import orderedmap as om
 assert cf
 
 
@@ -46,7 +47,7 @@ def printMenu():
     print('-------------------------------------')
 
 catalog = None
-crimefile = 'context_content_features/context_content_features-small.csv.csv'
+songFile = 'subsamples-small/context_content_features-small.csv'
 """
 Menu principal
 """
@@ -57,7 +58,11 @@ while running:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         cont = controller.init()
-        controller.loadData(cont, crimefile)
+        controller.loadData(cont,songFile)
+        print(type(cont))
+        print(cont.keys())
+        print(lt.size(cont['songs']))
+        print(om.size(cont['instrumentalness']))
 
     elif int(inputs[0]) == 2:
         #req 1
