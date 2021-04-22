@@ -70,8 +70,8 @@ while running:
         content=input("Contenido a buscar: ")
         total = controller.getContentByRange(cont, rangoInicial, rangoFinal, content)
         print("\nEl total de eventos en el rango es de: " + str(total))
-        print('Altura del arbol: ' + str(controller.indexHeight(cont, content)))
-        print('Elementos en el arbol: ' + str(controller.indexSize(cont, content))+"\n")
+        print('Altura del arbol '+content+': ' + str(controller.indexHeight(cont, content)))
+        print('Elementos en el arbol '+content+': ' + str(controller.indexSize(cont, content))+"\n")
 
     elif int(inputs[0]) == 3:
         #Req 2
