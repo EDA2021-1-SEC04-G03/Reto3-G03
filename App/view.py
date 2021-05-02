@@ -48,6 +48,18 @@ def printMenu():
     print('-------------------------------------')
 
 catalog = None
+genres={
+    "reggae":(60,90),
+    "down-tempo":(70,100),
+    "chill-out":(90,120),
+    "hip-hop":(85,115),
+    "jazz and funk":(120,125),
+    "pop":(100,130),
+    "r&b":(60,80),
+    "rock":(110,140),
+    "metal":(100,160)
+}
+
 """
 Menu principal
 """
@@ -136,7 +148,18 @@ while running:
 
     elif int(inputs[0]) == 5:
         #req 4
-        pass
+        print("Buscando canciones y artistas por género:")
+        generos = input("Indique los generos que quiere buscar:").split(",")
+
+        for genero in generos:
+            if genero.lower() not in genres:
+                print("\nEncontramos un nuevo genero, {}, por favor indique:".format(genero))
+                rangoInicial = float(input("Valor mínimo del Tempo del nuevo género musical: "))
+                rangoFinal = float(input("Valor máximo del Tempo del nuevo género musical: "))
+                genres[genero.lower()]=(rangoInicial,rangoFinal)
+        
+        #falta buscar por tempo e imprimir en pantalla
+        #los filtros para buscar por valor unico se usan en los req 2 y 3
 
     elif int(inputs[0]) == 6:
         #req 5
