@@ -33,6 +33,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 assert cf
 import datetime
+import random
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -174,10 +175,62 @@ def getContentByRange(analyzer, initialDate, finalDate, content):
     Retorna el numero de crimenes en un rago de fechas.
     """
     lst = om.values(analyzer[content], initialDate, finalDate)
-    totcrimes = 0
-    for lstdate in lt.iterator(lst):
-        totcrimes += lt.size(lstdate['lst'])
-    return totcrimes
+    return lst
+
+def getIntersectedList(cont, parametro1, parametro2, rangoInicial1, rangoFinal1, rangoInicial2, rangoFinal2):
+    intersectedList = lt.newList('ARRAY_LIST')
+
+    list1=getContentByRange(cont, rangoInicial1, rangoFinal1, parametro1)
+    list2=getContentByRange(cont, rangoInicial2, rangoFinal2, parametro2)
+
+    for lstindex in lt.iterator(list1):
+        for element in lt.iterator(lstindex['lst']):
+            #elemento a encontrar
+            notFound=True
+            for lstindex2 in lt.iterator(list2):
+                for element2 in lt.iterator(lstindex2['lst']):
+                    if element==element2:
+                        notFound=False
+                        lt.addLast(intersectedList, element)
+                        break
+                if notFound==False:
+                    break
+            
+    return intersectedList
+
+
+def getNumberOfEvents(lst):
+    numberElements = 0
+    for lstindex in lt.iterator(lst):
+        numberElements += lt.size(lstindex['lst'])
+    return numberElements
+
+def getRandomTracks(lst, number):
+    randomTracks = lt.newList('ARRAY_LIST')
+    for x in range(number):
+        lt.addLast(randomTracks, lt.getElement(lst, random.randint(0,lt.size(lst))))
+    return randomTracks
+
+def obtainUniqueArtists(lst):
+    uniqueArtists = {'artists': None}
+    uniqueArtists['artists'] = mp.newMap(31000,
+                                   maptype='PROBING',
+                                   comparefunction=None)
+    
+    for lstindex in lt.iterator(lst):
+        for event in lt.iterator(lstindex['lst']):
+            addArtist(uniqueArtists, event['artist_id'], event)
+    return artistsSize(uniqueArtists)
+
+def obtainUniqueTracks(lst):
+    uniqueTracks = {'tracks': None}
+    uniqueTracks['tracks'] = mp.newMap(11000,
+                                   maptype='PROBING',
+                                   comparefunction=None)
+
+    for event in lt.iterator(lst):
+        addTrack(uniqueTracks, event['track_id'], event)
+    return uniqueTracks
 
 def eventsSize(analyzer):
     """

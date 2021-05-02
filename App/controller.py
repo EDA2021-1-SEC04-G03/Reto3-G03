@@ -68,6 +68,24 @@ def getContentByRange(analyzer, initialDate, finalDate, content):
     return model.getContentByRange(analyzer, initialDate,
                                   finalDate, content)
 
+def getIntersectedList(cont, parametro1, parametro2, rangoInicial1, rangoFinal1, rangoInicial2, rangoFinal2):
+    return model.getIntersectedList(cont, parametro1, parametro2, rangoInicial1, rangoFinal1, rangoInicial2, rangoFinal2)
+
+def getNumberOfEvents(lst):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    return model.getNumberOfEvents(lst)
+
+def getRandomTracks(lst, number):
+    return model.getRandomTracks(lst, number)
+
+def obtainUniqueArtists(lst):
+    return model.obtainUniqueArtists(lst)
+
+def obtainUniqueTracks(lst):
+    return model.obtainUniqueTracks(lst)
+
 def indexHeight(analyzer, content):
     """
     Altura del indice (arbol)

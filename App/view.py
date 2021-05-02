@@ -36,6 +36,7 @@ operación solicitada
 """
 
 def printMenu():
+    print("")
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Caracterizar las reproducciones")
@@ -64,7 +65,7 @@ while running:
 
         for pos in (0,1,2,3,4):
             dicc=lt.getElement(cont['events'],pos)
-            print("Posición:",pos)
+            print("\nPosición:",pos)
             for key in dicc:
                 print(key+": "+dicc[key], end=", ")
             print("")
@@ -73,7 +74,7 @@ while running:
 
         for pos in (4,3,2,1,0):
             dicc=lt.getElement(cont['events'],size-pos)
-            print("Posición:",size-pos)
+            print("\nPosición:",size-pos)
             for key in dicc:
                 print(key+": "+dicc[key], end=", ")
             print("")
@@ -83,19 +84,55 @@ while running:
         print("\nBuscando eventos basados en una caracteristica de contenido en un rango determinado: ")
         rangoInicial = float(input("Rango inicial: "))
         rangoFinal = float(input("Rango final: "))
-        content=input("Contenido a buscar: ")
-        total = controller.getContentByRange(cont, rangoInicial, rangoFinal, content)
+        content=input("Contenido a buscar: ").lower()
+
+        list = controller.getContentByRange(cont, rangoInicial, rangoFinal, content)
+        total = controller.getNumberOfEvents(list)
+        artists = controller.obtainUniqueArtists(list)
+
         print("\nEl total de eventos en el rango es de: " + str(total))
-        print('Altura del arbol '+content+': ' + str(controller.indexHeight(cont, content)))
-        print('Elementos en el arbol '+content+': ' + str(controller.indexSize(cont, content))+"\n")
+        print("El total de artistas unicos en el rango es de: " + str(artists))
 
     elif int(inputs[0]) == 3:
         #Req 2
-        pass
+        print("\nEncontrando pistas que pueden utilizarse en una fiesta: ")
+        rangoInicial1 = float(input("Rango inicial energy: "))
+        rangoFinal1 = float(input("Rango final energy: "))
+        rangoInicial2 = float(input("Rango inicial danceability: "))
+        rangoFinal2 = float(input("Rango final danceability: "))
+
+        print("\nBuscando...\n")
+
+        list = controller.getIntersectedList(cont,'energy','danceability',rangoInicial1,rangoFinal1,rangoInicial2,rangoFinal2)
+        tracks = controller.obtainUniqueTracks(list)
+        randomTracks = controller.getRandomTracks(list,5)
+
+        print("El total de pistas unicas en los eventos es de: " + str(controller.tracksSize(tracks)))
+
+        print("Algunas pistas aleatorias:")
+        for track in lt.iterator(randomTracks):
+            print("{} con energy de {} y danceability de {}".format(track["track_id"],track["energy"],track["danceability"]))
+
     
     elif int(inputs[0]) == 4:
         #req 3
-        pass
+        print("\nEncontrando pistas que pueden utilizarse en periodos de estudio: ")
+        rangoInicial1 = float(input("Rango inicial instrumentalness: "))
+        rangoFinal1 = float(input("Rango final instrumentalness: "))
+        rangoInicial2 = float(input("Rango inicial tempo: "))
+        rangoFinal2 = float(input("Rango final tempo: "))
+
+        print("\nBuscando...\n")
+
+        list = controller.getIntersectedList(cont,'instrumentalness','tempo',rangoInicial1,rangoFinal1,rangoInicial2,rangoFinal2)
+        tracks = controller.obtainUniqueTracks(list)
+        randomTracks = controller.getRandomTracks(list,5)
+
+        print("El total de pistas unicas en los eventos es de: " + str(controller.tracksSize(tracks)))
+
+        print("Algunas pistas aleatorias:")
+        for track in lt.iterator(randomTracks):
+            print("{} con instrumentalness de {} y tempo de {}".format(track["track_id"],track["instrumentalness"],track["tempo"]))
 
     elif int(inputs[0]) == 5:
         #req 4
