@@ -35,9 +35,19 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+def printLine():
+    print('----------------------------------------')
+
+def printTitle(title):
+    print('=============',(str(title)).upper(),'=============')
+def printSubTitle(title):
+    print('-------------',title,'-------------')
+
+
+
 def printMenu():
     print("")
-    print("Bienvenido")
+    printTitle('Bienvenido')
     print("1- Cargar información en el catálogo")
     print("2- Caracterizar las reproducciones")
     print("3- Encontrar música para festejar")
@@ -45,7 +55,7 @@ def printMenu():
     print('5- Estudiar los géneros musicales')
     print('6- Indicar el género musical más escuchado en el tiempo')
     print("0- Salir")
-    print('-------------------------------------')
+    printLine()
 
 catalog = None
 genres={
@@ -149,14 +159,32 @@ while running:
     elif int(inputs[0]) == 5:
         #req 4
         print("Buscando canciones y artistas por género:")
-        generos = input("Indique los generos que quiere buscar:").split(",")
+        generos = ((input("Indique los generos que quiere buscar:")).lower()).split(",")
 
         for genero in generos:
-            if genero.lower() not in genres:
+            if genero not in genres:
                 print("\nEncontramos un nuevo genero, {}, por favor indique:".format(genero))
                 rangoInicial = float(input("Valor mínimo del Tempo del nuevo género musical: "))
                 rangoFinal = float(input("Valor máximo del Tempo del nuevo género musical: "))
-                genres[genero.lower()]=(rangoInicial,rangoFinal)
+                genres[genero]=(rangoInicial,rangoFinal)
+
+        result_genres = controller.genres_search(cont,generos,genres)
+        print("Total de reproducciones:",result_genres['total'])
+        for genero in generos:
+            printTitle(genero)
+            print('')
+            print('Para',genero,'el tempo debe ser entre',genres[genero][0],'y',genres[genero][1])
+            print('Numero de reproducciones:', result_genres[genero]['listens'])
+            print('Numero de artistas:',result_genres[genero]['artists'])
+            print('')
+            printSubTitle('Algunos artistas:')
+            counter = 1
+            for artist in result_genres[genero]['10arts']:
+                print('Artista '+str(counter)+':'+artist)
+                counter+=1
+            print('')
+            
+        print('')
         
         #falta buscar por tempo e imprimir en pantalla
         #los filtros para buscar por valor unico se usan en los req 2 y 3
@@ -167,5 +195,5 @@ while running:
 
     elif int(inputs[0]) == 0:
         running = False
-        print("Adios!")
+        print("Adios!  ᕕ(⌐■_■)ᕗ ♪♬ ")
 sys.exit(0)

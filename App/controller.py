@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.ADT.list import size
 import config as cf
 import model
 import csv
@@ -50,7 +51,7 @@ def loadData(analyzer):
     return
 
 def loadEvents(analyzer):
-    crimesfile = cf.data_dir + 'context_content_features/context_content_features-small.csv'
+    crimesfile = cf.data_dir + 'subsamples-small/context_content_features-small.csv'
     input_file = csv.DictReader(open(crimesfile, encoding="utf-8"),
                                 delimiter=",")
     for crime in input_file:
@@ -116,3 +117,21 @@ def tracksSize(catalog):
     Numero de autores cargados al catalogo
     """
     return model.tracksSize(catalog)
+
+def genres_search(catalog, generosList, genresInfo):
+    '''
+    Buscar por generos
+    '''
+    generoResults = {'total':0}
+
+    for genero in generosList:
+        tempoRange = genresInfo[genero]
+        genreList = model.getContentByRange(catalog,tempoRange[0],tempoRange[1],'tempo')
+        generoResults[genero] = {'listens':model.getNumberOfEvents(genreList),'artists':model.obtainUniqueArtists(genreList)}
+        generoResults[genero]['10arts'] = model.getArtists(genreList,10)
+        generoResults['total'] += generoResults[genero]['listens']
+    
+    return generoResults
+
+
+    

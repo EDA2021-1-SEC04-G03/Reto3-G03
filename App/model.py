@@ -313,3 +313,23 @@ def compareOffenses(offense1, offense2):
         return 1
     else:
         return -1
+
+def buscarRange(generosList,genresInfo):
+    min = genresInfo[generosList[0]][0]
+    max = genresInfo[generosList[0]][1]
+    for genero in generosList:
+        if(genresInfo[genero][0] < min):
+            min = genresInfo[genero][0]
+        if(genresInfo[genero][1] > max):
+            max = genresInfo[genero][1]
+    return (float(min),float(max))
+
+def getArtists(lst,number):
+    artistList = []
+    counter = 0
+    for i in lt.iterator(lst):
+        artistList.append(i['lst']['first']['info']['artist_id'])
+        counter+=1
+        if(counter == number):
+            break
+    return artistList
