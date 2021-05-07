@@ -61,7 +61,8 @@ def newAnalyzer():
 
     analyzer['sentiments'] = lt.newList('ARRAY_LIST')
 
-    analyzer['hashtags'] = mp.newMap(40,
+    #hay que ordenar por track
+    analyzer['hashtags'] = mp.newMap(31000,
                                    maptype='PROBING',
                                    loadfactor=0.5,
                                    comparefunction=None)

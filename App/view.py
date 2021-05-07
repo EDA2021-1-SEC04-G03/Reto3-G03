@@ -169,6 +169,7 @@ while running:
                 genres[genero]=(rangoInicial,rangoFinal)
 
         result_genres = controller.genres_search(cont,generos,genres,True)
+        
         print("Total de reproducciones:",result_genres['total'])
         for genero in generos:
             printTitle(genero)
@@ -195,13 +196,18 @@ while running:
         horaMaxima = input('Hora maxima: ')
         maxTime = horaMaxima.split(':')
         print("\nBuscando...\n")
-        results = controller.generoPorHora(cont,minTime,maxTime,genres)
-        print("Hay un total de",results['total'],'reproducciones entre las',horaMinima,"y las",horaMaxima,"\n")
+
+        genresInTimeRange = controller.generoPorHora(cont,minTime,maxTime,genres)
+        uniqueTracks = controller.obtainUniqueTracks(genresInTimeRange['genreLists'][0][1])
+
+        print("Hay un total de",genresInTimeRange['total'],'reproducciones entre las',horaMinima,"y las",horaMaxima,"\n")
         printSubTitle("Géneros ordenados por reproducciones")
+        for generoIndex in range(len(genresInTimeRange['genreLists'])):
+            print("Top",generoIndex+1,genresInTimeRange['genreLists'][generoIndex][0].title(),"con",genresInTimeRange['genreLists'][generoIndex][2],'reproducciones')
 
-        for generoIndex in range(len(results['genreLists'])):
-            print("Top",generoIndex+1,results['genreLists'][generoIndex][0].title(),"con",results['genreLists'][generoIndex][2],'reproducciones')
-
+        print()
+        printSubTitle("Análisis de sentimientos del "+genresInTimeRange['genreLists'][0][0].title())
+        print(genresInTimeRange['genreLists'][0][0].title(),"tiene",str(controller.tracksSize(uniqueTracks)),"pistas únicas")
 
 
     elif int(inputs[0]) == 0:
