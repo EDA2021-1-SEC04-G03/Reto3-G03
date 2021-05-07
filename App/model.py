@@ -42,7 +42,7 @@ los mismos.
 
 # Construccion de modelos
 
-contenttuple=("instrumentalness","liveness","speechiness","danceability","valence","loudness","tempo","acousticness","energy")
+contenttuple=("instrumentalness","liveness","speechiness","danceability","valence","loudness","tempo","acousticness","energy",'created_at')
 
 def newAnalyzer():
     """ Inicializa el analizador
@@ -115,14 +115,14 @@ def addTrack(analyzer, track_id, event):
 
 def updateDateIndex(map, event, content_name):
     """
-    Se toma la fecha del crimen y se busca si ya existe en el arbol
-    dicha fecha.  Si es asi, se adiciona a su lista de crimenes
-    y se actualiza el indice de tipos de crimenes.
 
-    Si no se encuentra creado un nodo para esa fecha en el arbol
-    se crea y se actualiza el indice de tipos de crimenes
     """
-    content = float(event[content_name])
+    if content_name == 'created_at':
+        dateTime = event[content_name].split()
+        timeOfDay = dateTime[1].split(':')
+        content = timeToSeconds(timeOfDay)
+    else:
+        content = float(event[content_name])
     entry = om.get(map, content)
     if entry is None:
         floatentry = newDataEntry(event)
@@ -333,3 +333,15 @@ def getArtists(lst,number):
         if(counter == number):
             break
     return artistList
+
+def timeToSeconds(time):
+    seconds = (float(time[0])*3600.0)+(float(time[1])*60.0)+(float(time[2]))
+    return seconds
+
+def listToRbt(list,parameter):
+    genres_rbt = om.newMap(omaptype='RBT',
+                                comparefunction=compareFloat)
+    for event in lt.iterator(list):
+        updateDateIndex(genres_rbt,event['lst']['first']['info'],parameter)
+    return genres_rbt
+

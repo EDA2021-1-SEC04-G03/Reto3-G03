@@ -118,7 +118,7 @@ def tracksSize(catalog):
     """
     return model.tracksSize(catalog)
 
-def genres_search(catalog, generosList, genresInfo):
+def genres_search(catalog, generosList, genresInfo,artistsBool):
     '''
     Buscar por generos
     '''
@@ -128,10 +128,28 @@ def genres_search(catalog, generosList, genresInfo):
         tempoRange = genresInfo[genero]
         genreList = model.getContentByRange(catalog,tempoRange[0],tempoRange[1],'tempo')
         generoResults[genero] = {'listens':model.getNumberOfEvents(genreList),'artists':model.obtainUniqueArtists(genreList)}
-        generoResults[genero]['10arts'] = model.getArtists(genreList,10)
+        if artistsBool == True:
+            generoResults[genero]['10arts'] = model.getArtists(genreList,10)
         generoResults['total'] += generoResults[genero]['listens']
     
     return generoResults
 
+def generoPorHora(catalog,min,max,genresInfo):
+    min = model.timeToSeconds(min)
+    max = model.timeToSeconds(max)
+    timeList = getContentByRange(catalog,min,max,'created_at')
+    
+    orderedTempo = model.listToRbt(timeList,'tempo')
+    dictTempo = {'tempo':orderedTempo}
+    resultGenre = genres_search(dictTempo,genresInfo.keys(),genresInfo,False)
+    return resultGenre
+    
+
+    #print(orderedGenres['root']['value']['lst']['first']['info'])
+    
+
+
+
+    return results
 
     

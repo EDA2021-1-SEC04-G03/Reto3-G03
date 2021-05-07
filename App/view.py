@@ -168,7 +168,7 @@ while running:
                 rangoFinal = float(input("Valor máximo del Tempo del nuevo género musical: "))
                 genres[genero]=(rangoInicial,rangoFinal)
 
-        result_genres = controller.genres_search(cont,generos,genres)
+        result_genres = controller.genres_search(cont,generos,genres,True)
         print("Total de reproducciones:",result_genres['total'])
         for genero in generos:
             printTitle(genero)
@@ -186,12 +186,16 @@ while running:
             
         print('')
         
-        #falta buscar por tempo e imprimir en pantalla
-        #los filtros para buscar por valor unico se usan en los req 2 y 3
 
     elif int(inputs[0]) == 6:
         #req 5
-        pass
+        print('Entre cuales horas quiere buscar? (Escribir en formato HH:MM:SS)')
+        minTime = input('Hora minima:').split(':')
+        maxTime = input('Hora maxima:').split(':')
+        results = controller.generoPorHora(cont,minTime,maxTime,genres)
+        print(results)
+
+
 
     elif int(inputs[0]) == 0:
         running = False
