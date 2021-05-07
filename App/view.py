@@ -190,10 +190,17 @@ while running:
     elif int(inputs[0]) == 6:
         #req 5
         print('Entre cuales horas quiere buscar? (Escribir en formato HH:MM:SS)')
-        minTime = input('Hora minima:').split(':')
-        maxTime = input('Hora maxima:').split(':')
+        horaMinima = input('Hora minima: ')
+        minTime = horaMinima.split(':')
+        horaMaxima = input('Hora maxima: ')
+        maxTime = horaMaxima.split(':')
+        print("\nBuscando...\n")
         results = controller.generoPorHora(cont,minTime,maxTime,genres)
-        print(results)
+        print("Hay un total de",results['total'],'reproducciones entre las',horaMinima,"y las",horaMaxima,"\n")
+        printSubTitle("Géneros ordenados por reproducciones")
+
+        for generoIndex in range(len(results['genreLists'])):
+            print("Top",generoIndex+1,results['genreLists'][generoIndex][0].title(),"con",results['genreLists'][generoIndex][2],'reproducciones')
 
 
 

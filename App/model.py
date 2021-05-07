@@ -42,7 +42,7 @@ los mismos.
 
 # Construccion de modelos
 
-contenttuple=("instrumentalness","liveness","speechiness","danceability","valence","loudness","tempo","acousticness","energy",'created_at')
+contenttuple=("instrumentalness","liveness","speechiness","danceability","valence","loudness","tempo","acousticness","energy")
 
 def newAnalyzer():
     """ Inicializa el analizador
@@ -57,7 +57,14 @@ def newAnalyzer():
                'artists': None,
                'tracks': None}
 
-    analyzer['events'] = lt.newList('SINGLE_LINKED')
+    analyzer['events'] = lt.newList('ARRAY_LIST')
+
+    analyzer['sentiments'] = lt.newList('ARRAY_LIST')
+
+    analyzer['hashtags'] = mp.newMap(40,
+                                   maptype='PROBING',
+                                   loadfactor=0.5,
+                                   comparefunction=None)
 
     analyzer['artists'] = mp.newMap(11000,
                                    maptype='PROBING',
@@ -84,6 +91,13 @@ def addEvent(analyzer, event):
     addTrack(analyzer, event['track_id'], event)
     for content in contenttuple:
         updateDateIndex(analyzer[content], event, content)
+
+def addSentiment (analyzer, sentiment):
+    lt.addLast(analyzer['sentiments'], sentiment)
+    return
+
+def addHashtags (analyzer, sentiment):
+    return
 
 def addArtist(analyzer, artist_id, event):
     """
@@ -117,12 +131,7 @@ def updateDateIndex(map, event, content_name):
     """
 
     """
-    if content_name == 'created_at':
-        dateTime = event[content_name].split()
-        timeOfDay = dateTime[1].split(':')
-        content = timeToSeconds(timeOfDay)
-    else:
-        content = float(event[content_name])
+    content = float(event[content_name])
     entry = om.get(map, content)
     if entry is None:
         floatentry = newDataEntry(event)
@@ -314,16 +323,6 @@ def compareOffenses(offense1, offense2):
     else:
         return -1
 
-def buscarRange(generosList,genresInfo):
-    min = genresInfo[generosList[0]][0]
-    max = genresInfo[generosList[0]][1]
-    for genero in generosList:
-        if(genresInfo[genero][0] < min):
-            min = genresInfo[genero][0]
-        if(genresInfo[genero][1] > max):
-            max = genresInfo[genero][1]
-    return (float(min),float(max))
-
 def getArtists(lst,number):
     artistList = []
     counter = 0
@@ -338,10 +337,24 @@ def timeToSeconds(time):
     seconds = (float(time[0])*3600.0)+(float(time[1])*60.0)+(float(time[2]))
     return seconds
 
-def listToRbt(list,parameter):
-    genres_rbt = om.newMap(omaptype='RBT',
-                                comparefunction=compareFloat)
-    for event in lt.iterator(list):
-        updateDateIndex(genres_rbt,event['lst']['first']['info'],parameter)
-    return genres_rbt
+def generoPorHora(catalog,min,max,genresInfo):
+    generoResults = {'total':0,'genreLists':[]}
+    min = timeToSeconds(min)
+    max = timeToSeconds(max)
 
+    for genero in genresInfo:
+        genreListFinal = lt.newList('ARRAY_LIST')
+        tempoRange = genresInfo[genero]
+        genreList = getContentByRange(catalog,tempoRange[0],tempoRange[1],'tempo')
+        for lstindex in lt.iterator(genreList):
+            for event in lt.iterator(lstindex['lst']):
+                dateTime = event['created_at'].split()
+                timeOfDay = dateTime[1].split(':')
+                time_of_event = timeToSeconds(timeOfDay)
+                if time_of_event>=min and time_of_event<=max:
+                    lt.addLast(genreListFinal, event)
+        
+        generoResults['genreLists'].append([genero,genreListFinal,lt.size(genreListFinal)])
+        generoResults['total']+= lt.size(genreListFinal)
+    generoResults['genreLists'].sort(key=lambda x:x[2],reverse=True)
+    return generoResults
