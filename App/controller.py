@@ -54,7 +54,7 @@ def loadData(analyzer):
     return
 
 def loadEvents(analyzer):
-    crimesfile = cf.data_dir + 'context_content_features/context_content_features-small.csv'
+    crimesfile = cf.data_dir + 'context_content_features/context_content_features-80pct.csv'
     input_file = csv.DictReader(open(crimesfile, encoding="utf-8"),
                                 delimiter=",")
     for crime in input_file:
@@ -70,7 +70,7 @@ def loadSentiments(analyzer):
     return analyzer
 
 def loadHashtags(analyzer):
-    hastagsfile = cf.data_dir + 'user_track_hashtag_timestamp/user_track_hashtag_timestamp-small.csv'
+    hastagsfile = cf.data_dir + 'user_track_hashtag_timestamp/user_track_hashtag_timestamp-80pct.csv'
     input_file = csv.DictReader(open(hastagsfile, encoding="utf-8"),
                                 delimiter=",")
     for hashtag in input_file:
