@@ -70,8 +70,6 @@ genres={
     "metal":(100,160)
 }
 
-from DISClib.ADT import map as mp
-import model
 """
 Menu principal
 """
@@ -86,7 +84,6 @@ while running:
         print('Eventos cargados: ' + str(controller.eventsSize(cont)))
         print('Artistas únicos cargados: ' + str(controller.artistsSize(cont)))
         print('Pistas de audio únicas cargados: ' + str(controller.tracksSize(cont)))
-        print('Pistas de audio únicas cargados en archivo de hashtags: ' + str(mp.size(cont['hashtagsbytrack'])))
 
         for pos in (0,1,2,3,4):
             dicc=lt.getElement(cont['events'],pos)
