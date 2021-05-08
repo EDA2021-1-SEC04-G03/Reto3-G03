@@ -55,16 +55,17 @@ def newAnalyzer():
     """
     analyzer = {'events': None,
                'artists': None,
-               'tracks': None}
+               'tracks': None,
+               'sentiments': None,
+               'hashtagsbytrack':None}
 
     analyzer['events'] = lt.newList('ARRAY_LIST')
 
     analyzer['sentiments'] = lt.newList('ARRAY_LIST')
 
     #hay que ordenar por track
-    analyzer['hashtags'] = mp.newMap(31000,
+    analyzer['hashtagsbytrack'] = mp.newMap(31000,
                                    maptype='PROBING',
-                                   loadfactor=0.5,
                                    comparefunction=None)
 
     analyzer['artists'] = mp.newMap(11000,
@@ -98,7 +99,22 @@ def addSentiment (analyzer, sentiment):
     return
 
 def addHashtags (analyzer, sentiment):
+    addTrackbyHashtag(analyzer, sentiment['track_id'], sentiment)
     return
+
+def addTrackbyHashtag(analyzer, track_id, event):
+    """
+    Esta función adiciona un video a la lista de videos de la misma categoría.
+    """
+    tracks = analyzer['hashtagsbytrack']
+    existtrack = mp.contains(tracks, track_id)
+    if existtrack:
+        entry = mp.get(tracks, track_id)
+        track = me.getValue(entry)
+    else:
+        track = newTrack(track_id)
+        mp.put(tracks, track_id, track)
+    lt.addLast(track['events'], event)
 
 def addArtist(analyzer, artist_id, event):
     """

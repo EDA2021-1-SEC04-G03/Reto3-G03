@@ -73,8 +73,7 @@ def loadHashtags(analyzer):
     input_file = csv.DictReader(open(hastagsfile, encoding="utf-8"),
                                 delimiter=",")
     for hashtag in input_file:
-        #model.addHashtags(analyzer, hashtag)
-        pass
+        model.addHashtags(analyzer, hashtag)
     return analyzer
 
 # Funciones de ordenamiento
