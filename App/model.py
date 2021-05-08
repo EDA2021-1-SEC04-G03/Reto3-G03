@@ -211,7 +211,6 @@ def getIntersectedList(cont, parametro1, parametro2, rangoInicial1, rangoFinal1,
 
     for lstindex in lt.iterator(list1):
         for element in lt.iterator(lstindex['lst']):
-            #elemento a encontrar
             notFound=True
             for lstindex2 in lt.iterator(list2):
                 for element2 in lt.iterator(lstindex2['lst']):
@@ -221,9 +220,8 @@ def getIntersectedList(cont, parametro1, parametro2, rangoInicial1, rangoFinal1,
                         break
                 if notFound==False:
                     break
-            
+    
     return intersectedList
-
 
 def getNumberOfEvents(lst):
     numberElements = 0
@@ -236,6 +234,40 @@ def getRandomTracks(lst, number):
     for x in range(number):
         lt.addLast(randomTracks, lt.getElement(lst, random.randint(0,lt.size(lst))))
     return randomTracks
+
+def get10TrackHashtags(cont, uniqueTracks, numberOfRandomTracks):
+    uniqueTracksList = mp.keySet(uniqueTracks['tracks'])
+    randomTracks = getRandomTracks(uniqueTracksList, numberOfRandomTracks)
+    results=[]
+    
+    for track_id in lt.iterator(randomTracks):
+        existtrack = mp.contains(cont['hashtagsbytrack'], track_id)
+        if existtrack:
+            entry = mp.get(cont['hashtagsbytrack'], track_id)
+            hashtaglist = me.getValue(entry)
+            hashtagTempList=[]
+            for hashtag in lt.iterator(hashtaglist['events']):
+                if hashtag['hashtag'].lower() not in hashtagTempList:
+                    hashtagTempList.append(hashtag['hashtag'].lower())
+            contador=0
+            sumVader=0
+            for hashtag in hashtagTempList:
+                for elemento in lt.iterator(cont['sentiments']):
+                    if elemento['hashtag']==hashtag and elemento['vader_avg']!='':
+                        print(hashtag)
+                        sumVader+=float(elemento['vader_avg'])
+                        contador+=1
+                        break
+            if contador!=0:
+                promedio=sumVader/contador
+            else:
+                promedio=0
+            results.append([track_id,len(hashtagTempList),promedio])
+        else:
+            print("No existe!")
+            #track = newTrack(track_id)
+            #mp.put(tracks, track_id, track)
+    return results
 
 def obtainUniqueArtists(lst):
     uniqueArtists = {'artists': None}

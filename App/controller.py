@@ -96,6 +96,9 @@ def getNumberOfEvents(lst):
     """
     return model.getNumberOfEvents(lst)
 
+def getTrackHashtags(cont, uniqueTracks, numberOfRandomTracks):
+    return model.get10TrackHashtags(cont, uniqueTracks, numberOfRandomTracks)
+
 def getRandomTracks(lst, number):
     return model.getRandomTracks(lst, number)
 

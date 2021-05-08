@@ -71,7 +71,7 @@ genres={
 }
 
 from DISClib.ADT import map as mp
-
+import model
 """
 Menu principal
 """
@@ -86,7 +86,7 @@ while running:
         print('Eventos cargados: ' + str(controller.eventsSize(cont)))
         print('Artistas únicos cargados: ' + str(controller.artistsSize(cont)))
         print('Pistas de audio únicas cargados: ' + str(controller.tracksSize(cont)))
-        print('Pistas de audio únicas cargados en archivo de hastags: ' + str(mp.size(cont['hashtagsbytrack'])))
+        print('Pistas de audio únicas cargados en archivo de hashtags: ' + str(mp.size(cont['hashtagsbytrack'])))
 
         for pos in (0,1,2,3,4):
             dicc=lt.getElement(cont['events'],pos)
@@ -200,17 +200,23 @@ while running:
         maxTime = horaMaxima.split(':')
         print("\nBuscando...\n")
 
-        genresInTimeRange = controller.generoPorHora(cont,minTime,maxTime,genres)
+        genresInTimeRange = controller.generoPorHora(cont, minTime, maxTime, genres)
         uniqueTracks = controller.obtainUniqueTracks(genresInTimeRange['genreLists'][0][1])
+        randomTracks = controller.getTrackHashtags(cont, uniqueTracks, 10)
 
         print("Hay un total de",genresInTimeRange['total'],'reproducciones entre las',horaMinima,"y las",horaMaxima,"\n")
         printSubTitle("Géneros ordenados por reproducciones")
         for generoIndex in range(len(genresInTimeRange['genreLists'])):
             print("Top",generoIndex+1,genresInTimeRange['genreLists'][generoIndex][0].title(),"con",genresInTimeRange['genreLists'][generoIndex][2],'reproducciones')
 
-        print()
+        print("\nEl género TOP es",genresInTimeRange['genreLists'][0][0].title(),"con",genresInTimeRange['genreLists'][0][2],"reproducciones\n")
+
         printSubTitle("Análisis de sentimientos del "+genresInTimeRange['genreLists'][0][0].title())
         print(genresInTimeRange['genreLists'][0][0].title(),"tiene",str(controller.tracksSize(uniqueTracks)),"pistas únicas")
+
+        print("10 pistas aleatorias:")
+        for trackIndex in range(len(randomTracks)):
+            print("Pista",trackIndex+1,randomTracks[trackIndex][0],"con",randomTracks[trackIndex][1],"hashtag y Vader =",randomTracks[trackIndex][2])
 
 
     elif int(inputs[0]) == 0:
