@@ -214,10 +214,9 @@ while running:
         printSubTitle("Análisis de sentimientos del "+genresInTimeRange['genreLists'][0][0].title())
         print(genresInTimeRange['genreLists'][0][0].title(),"tiene",str(controller.tracksSize(uniqueTracks)),"pistas únicas")
 
-        print("10 pistas aleatorias:")
+        print("\n10 pistas aleatorias:")
         for trackIndex in range(len(randomTracks)):
-            print("Pista",trackIndex+1,randomTracks[trackIndex][0],"con",randomTracks[trackIndex][1],"hashtag y Vader =",randomTracks[trackIndex][2])
-
+            print("Top",trackIndex+1,randomTracks[trackIndex][0],"con",randomTracks[trackIndex][1],"hashtags y Vader =",randomTracks[trackIndex][2])
 
     elif int(inputs[0]) == 0:
         running = False

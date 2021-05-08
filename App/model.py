@@ -238,7 +238,7 @@ def getRandomTracks(lst, number):
 def get10TrackHashtags(cont, uniqueTracks, numberOfRandomTracks):
     uniqueTracksList = mp.keySet(uniqueTracks['tracks'])
     randomTracks = getRandomTracks(uniqueTracksList, numberOfRandomTracks)
-    results=[]
+    tracks=[]
     
     for track_id in lt.iterator(randomTracks):
         existtrack = mp.contains(cont['hashtagsbytrack'], track_id)
@@ -254,20 +254,18 @@ def get10TrackHashtags(cont, uniqueTracks, numberOfRandomTracks):
             for hashtag in hashtagTempList:
                 for elemento in lt.iterator(cont['sentiments']):
                     if elemento['hashtag']==hashtag and elemento['vader_avg']!='':
-                        print(hashtag)
                         sumVader+=float(elemento['vader_avg'])
                         contador+=1
                         break
             if contador!=0:
-                promedio=sumVader/contador
+                promedio=round(sumVader/contador,2)
             else:
+                hashtagTempList=[]
                 promedio=0
-            results.append([track_id,len(hashtagTempList),promedio])
-        else:
-            print("No existe!")
-            #track = newTrack(track_id)
-            #mp.put(tracks, track_id, track)
-    return results
+            tracks.append([track_id,len(hashtagTempList),promedio])
+    
+    tracks.sort(key=lambda x:x[1],reverse=True)
+    return tracks
 
 def obtainUniqueArtists(lst):
     uniqueArtists = {'artists': None}
