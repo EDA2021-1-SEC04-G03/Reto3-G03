@@ -207,20 +207,13 @@ def getIntersectedList(cont, parametro1, parametro2, rangoInicial1, rangoFinal1,
     intersectedList = lt.newList('ARRAY_LIST')
 
     list1=getContentByRange(cont, rangoInicial1, rangoFinal1, parametro1)
-    list2=getContentByRange(cont, rangoInicial2, rangoFinal2, parametro2)
 
     for lstindex in lt.iterator(list1):
         for element in lt.iterator(lstindex['lst']):
             #elemento a encontrar
-            notFound=True
-            for lstindex2 in lt.iterator(list2):
-                for element2 in lt.iterator(lstindex2['lst']):
-                    if element==element2:
-                        notFound=False
-                        lt.addLast(intersectedList, element)
-                        break
-                if notFound==False:
-                    break
+            filterValue = float(element[parametro2])
+            if filterValue >= rangoInicial2 and filterValue <= rangoFinal2:
+                lt.addLast(intersectedList, element)
             
     return intersectedList
 
