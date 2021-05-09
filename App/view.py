@@ -108,15 +108,15 @@ while running:
         rangoFinal = float(input("Rango final: "))
         content=input("Contenido a buscar: ").lower()
 
-        start_time, start_memory=controller.initiateCalculation()
+        #start_time, start_memory=controller.initiateCalculation()
 
         list = controller.getContentByRange(cont, rangoInicial, rangoFinal, content)
         total = controller.getNumberOfEvents(list)
         artists = controller.obtainUniqueArtists(list)
 
-        answer=controller.finishCalculation(start_time, start_memory)
+        '''answer=controller.finishCalculation(start_time, start_memory)
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+              "Memoria [kB]: ", f"{answer[1]:.3f}")'''
 
         print("\nEl total de eventos en el rango es de: " + str(total))
         print("El total de artistas unicos en el rango es de: " + str(artists))
@@ -131,15 +131,15 @@ while running:
 
         print("\nBuscando...\n")
 
-        start_time, start_memory=controller.initiateCalculation()
+        #start_time, start_memory=controller.initiateCalculation()
 
         list = controller.getIntersectedList(cont,'energy','danceability',rangoInicial1,rangoFinal1,rangoInicial2,rangoFinal2)
         tracks = controller.obtainUniqueTracks(list)
         randomTracks = controller.getRandomTracks(list,5)
 
-        answer=controller.finishCalculation(start_time, start_memory)
+        '''answer=controller.finishCalculation(start_time, start_memory)
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+              "Memoria [kB]: ", f"{answer[1]:.3f}")'''
 
         print("El total de pistas unicas en los eventos es de: " + str(controller.tracksSize(tracks)))
 
@@ -158,15 +158,15 @@ while running:
 
         print("\nBuscando...\n")
 
-        start_time, start_memory=controller.initiateCalculation()
+        #start_time, start_memory=controller.initiateCalculation()
 
         list = controller.getIntersectedList(cont,'instrumentalness','tempo',rangoInicial1,rangoFinal1,rangoInicial2,rangoFinal2)
         tracks = controller.obtainUniqueTracks(list)
         randomTracks = controller.getRandomTracks(list,5)
 
-        answer=controller.finishCalculation(start_time, start_memory)
+        '''answer=controller.finishCalculation(start_time, start_memory)
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+              "Memoria [kB]: ", f"{answer[1]:.3f}")'''
 
         print("El total de pistas unicas en los eventos es de: " + str(controller.tracksSize(tracks)))
 
@@ -186,13 +186,13 @@ while running:
                 rangoFinal = float(input("Valor máximo del Tempo del nuevo género musical: "))
                 genres[genero]=(rangoInicial,rangoFinal)
 
-        start_time, start_memory=controller.initiateCalculation()
+        #start_time, start_memory=controller.initiateCalculation()
 
         result_genres = controller.genres_search(cont,generos,genres,True)
 
-        answer=controller.finishCalculation(start_time, start_memory)
+        '''answer=controller.finishCalculation(start_time, start_memory)
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+              "Memoria [kB]: ", f"{answer[1]:.3f}")'''
         
         print("Total de reproducciones:",result_genres['total'])
         for genero in generos:
@@ -221,15 +221,15 @@ while running:
         maxTime = horaMaxima.split(':')
         print("\nBuscando...\n")
 
-        start_time, start_memory=controller.initiateCalculation()
+        #start_time, start_memory=controller.initiateCalculation()
 
         genresInTimeRange = controller.generoPorHora(cont, minTime, maxTime, genres)
         uniqueTracks = controller.obtainUniqueTracks(genresInTimeRange['genreLists'][0][1])
         randomTracks = controller.getTrackHashtags(cont, uniqueTracks, 10)
 
-        answer=controller.finishCalculation(start_time, start_memory)
+        '''answer=controller.finishCalculation(start_time, start_memory)
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+              "Memoria [kB]: ", f"{answer[1]:.3f}")'''
 
         print("Hay un total de",genresInTimeRange['total'],'reproducciones entre las',horaMinima,"y las",horaMaxima,"\n")
         printSubTitle("Géneros ordenados por reproducciones")
